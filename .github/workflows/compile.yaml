@@ -1,0 +1,29 @@
+name: Compile ESPHome Firmware
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ESPHome
+        run: pip3 install esphome
+
+      - name: Compile firmware
+        run: esphome compile esp32-temperature-monitor.yaml
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: .esphome/build/esp32-temperature-monitor/.pioenvs/esp32-temperature-monitor/firmware.bin
